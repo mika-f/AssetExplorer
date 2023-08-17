@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:engine="UnityEngine.UIElements"
+  xmlns:editor="UnityEditor.UIElements"
+  xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+  xsi:schemaLocation="UnityEditor.UIElements ../../../../UIElementsSchema/UnityEditor.UIElements.xsd
+                      UnityEngine.UIElements ../../../../UIElementsSchema/UnityEngine.UIElements.xsd"
+>
+  <engine:VisualElement class="mx-auto px-4 py-2 w-full">
+    <engine:VisualElement>
+      <engine:Label text="AssetDatabase - Contribute"
+        class="text-xl mb-1 pb-1 border-b-2px border-cccccc" />
+    </engine:VisualElement>
+
+    <engine:VisualElement class="my-1">
+      <engine:Label
+        text="You can update the database by sending assets that does not exist in AssetDatabase along with the package name."
+        class="text-base my-1 whitespace-normal" />
+      <engine:Label
+        text="Note: AssetDatabase will only send the GUID and path of the asset and which package it is associated with to the server, not the contents of the asset."
+        class="text-sm whitespace-normal text-0xf8719d bold" />
+    </engine:VisualElement>
+
+    <engine:VisualElement class="my-4">
+      <engine:Label text="Package Information" class="text-lg mb-2" />
+
+      <engine:VisualElement>
+        <editor:PropertyField label="Root Directory" binding-path="_dir" class="my-2px text-14px" />
+        <engine:TextField label="Name" binding-path="_name" class="my-2px text-14px" />
+        <engine:TextField label="Version" binding-path="_version" class="my-2px text-14px" />
+        <engine:TextField label="URL" binding-path="_url" class="my-2px text-14px" />
+        <engine:Button text="Preview" class="text-14px mt-1" name="preview-button" />
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <engine:VisualElement class="my-4">
+      <engine:Label text="Preview" class="text-lg mb-2" />
+      <engine:ScrollView class="max-h-200px border-1px border-cccccc p-1">
+        <engine:VisualElement name="preview-container">
+          <engine:Label text="No Assets Found" />
+        </engine:VisualElement>
+      </engine:ScrollView>
+    </engine:VisualElement>
+
+    <engine:VisualElement class="mt-4">
+      <engine:Label text="Check DOES NOT contain any private assets!"
+        class="text-sm whitespace-normal text-0xf8719d bold mb-1" />
+      <engine:Button text="Submit" class="text-14px mt-1" name="submit-button" />
+    </engine:VisualElement>
+  </engine:VisualElement>
+</engine:UXML>

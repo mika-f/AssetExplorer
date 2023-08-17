@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:engine="UnityEngine.UIElements"
+  xmlns:editor="UnityEditor.UIElements"
+  xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+  xsi:schemaLocation="UnityEngine.UIElements ../../../../UIElementsSchema/UnityEngine.UIElements.xsd
+                      UnityEditor.UIElements ../../../../UIElementsSchema/UnityEditor.UIElements.xsd"
+>
+  <engine:VisualElement class="mx-auto px-4 py-2 w-full">
+    <engine:VisualElement>
+      <engine:Label text="AssetDatabase - Reverse Lookup"
+        class="text-xl mb-1 pb-1 border-b-2px border-cccccc" />
+    </engine:VisualElement>
+
+    <engine:VisualElement class="my-1">
+      <engine:Label
+        text="You can search from the database which asset was references from the GUID of the asset."
+        class="text-base my-1 whitespace-normal" />
+      <engine:Label
+        text="Note: AssetDatabase will only send the GUID of the asset to the server, not the contents of the asset."
+        class="text-sm whitespace-normal text-0xf8719d bold" />
+    </engine:VisualElement>
+
+    <engine:VisualElement class="my-4">
+      <engine:Label text="Asset" class="text-lg mb-2" />
+
+      <engine:VisualElement>
+        <editor:PropertyField label="Asset" binding-path="_go" class="my-2px text-14px" />
+        <engine:Label text="or" class="text-sm my-2 text-center" />
+        <engine:TextField label="GUID" binding-path="_guid" class="my-2px text-14px" />
+        <engine:Button text="Search" class="text-14px mt-1" name="search-button" />
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <engine:VisualElement class="my-4">
+      <engine:Label text="Result" class="text-lg mb-2" />
+      <engine:ScrollView class="min-h-200px" mode="VerticalAndHorizontal">
+        <engine:VisualElement name="result-container" class="min-w-460px">
+          <engine:VisualElement name="not-found" class="flex border-1px border-cccccc p-1">
+            <engine:Label text="No Asset Found" />
+          </engine:VisualElement>
+          <engine:VisualElement name="found" class="none flex-row border-1px border-cccccc p-1">
+            <engine:VisualElement class="w-160px flex-shrink-0">
+              <engine:Label class="h-18px bold text-sm mb-1" text="GUID :" />
+              <engine:Label class="h-18px bold text-sm mb-1" text="PACKAGE :" />
+              <engine:Label class="h-18px bold text-sm mb-1" text="URL:" />
+              <engine:Label class="h-18px bold text-sm mb-1" text="WELL KNOWN NAME:" />
+              <engine:Label class="h-18px bold text-sm mb-1" text="WELL KNOWN TYPE:" />
+              <engine:Label class="h-18px bold text-sm mb-1" text="CANONICAL NAME:" />
+              <engine:Label class="h-18px bold text-sm mb-1" text="VERSIONS IN :" />
+              <engine:Label class="h-18px bold text-sm mb-1" text="VERIFIED BY USES:" />
+            </engine:VisualElement>
+            <engine:VisualElement class="flex-grow-1 min-w-290px">
+              <engine:Label class="h-18px text-sm mb-1" name="guid" />
+              <engine:Label class="h-18px text-sm mb-1" name="package" />
+              <engine:Label class="h-18px text-sm mb-1" name="url" />
+              <engine:Label class="h-18px text-sm mb-1" name="well-known-name" />
+              <engine:Label class="h-18px text-sm mb-1" name="well-known-type" />
+              <engine:Label class="h-18px text-sm mb-1" name="canonical-name" />
+              <engine:Label class="h-18px text-sm mb-1" name="versions" />
+              <engine:Label class="h-18px text-sm mb-1 text-0x22c55e bold" name="verified" />
+            </engine:VisualElement>
+          </engine:VisualElement>
+          <engine:VisualElement name="found-multi" class="none">
+            <!--
+            <engine:VisualElement class="border-1px border-cccccc p-1 my-1">
+              <engine:Label class="bold text-lg mb-2" text="Shader" />
+              <engine:VisualElement class="flex flex-row">
+                <engine:VisualElement class="w-160px flex-shrink-0">
+                  <engine:Label class="h-18px bold text-sm mb-1" text="GUID :" />
+                  <engine:Label class="h-18px bold text-sm mb-1" text="PACKAGE :" />
+                  <engine:Label class="h-18px bold text-sm mb-1" text="URL:" />
+                  <engine:Label class="h-18px bold text-sm mb-1" text="WELL KNOWN NAME:" />
+                  <engine:Label class="h-18px bold text-sm mb-1" text="WELL KNOWN TYPE:" />
+                  <engine:Label class="h-18px bold text-sm mb-1" text="CANONICAL NAME:" />
+                  <engine:Label class="h-18px bold text-sm mb-1" text="VERSIONS IN :" />
+                  <engine:Label class="h-18px bold text-sm mb-1" text="VERIFIED BY USES:" />
+                </engine:VisualElement>
+                <engine:VisualElement class="flex-grow-1 min-w-290px">
+                  <engine:Label class="h-18px text-sm mb-1" name="a-guid" />
+                  <engine:Label class="h-18px text-sm mb-1" name="a-package" />
+                  <engine:Label class="h-18px text-sm mb-1" name="a-url" />
+                  <engine:Label class="h-18px text-sm mb-1" name="a-well-known-name" />
+                  <engine:Label class="h-18px text-sm mb-1" name="a-well-known-type" />
+                  <engine:Label class="h-18px text-sm mb-1" name="a-canonical-name" />
+                  <engine:Label class="h-18px text-sm mb-1" name="a-versions" />
+                  <engine:Label class="h-18px text-sm mb-1 text-0x22c55e bold" name="a-verified" />
+                </engine:VisualElement>
+              </engine:VisualElement>
+            </engine:VisualElement>
+            -->
+          </engine:VisualElement>
+        </engine:VisualElement>
+      </engine:ScrollView>
+    </engine:VisualElement>
+  </engine:VisualElement>
+</engine:UXML>
