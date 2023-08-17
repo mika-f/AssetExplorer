@@ -15,7 +15,7 @@ You can search for assets by the specified GUID.
 
 ### Verify Assets
 
-> ![NOTE]
+> ![NOTE]  
 > This feature requires an API token. API token issuance requires authentication by a third-party IdP.
 
 Verifies that the registered asset information is correct and submits the results.  
@@ -23,7 +23,7 @@ This makes it possible to improve the reliability of the registered data.
 
 ### Contribute Assets
 
-> ![NOTE]
+> ![NOTE]  
 > This feature requires an API token. API token issuance requires authentication by a third-party IdP.
 
 Register a new asset information.
