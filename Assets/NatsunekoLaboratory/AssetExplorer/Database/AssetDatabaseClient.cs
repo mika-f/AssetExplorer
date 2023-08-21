@@ -27,7 +27,8 @@ namespace NatsunekoLaboratory.AssetExplorer.Database
         {
             get
             {
-                if (_instance == null) _instance = new AssetDatabaseClient("https://assetdatabase.natsuneko.cat/api");
+                if (_instance == null)
+                    _instance = new AssetDatabaseClient("https://assetdatabase.natsuneko.cat");
 
                 return _instance;
             }
@@ -46,7 +47,7 @@ namespace NatsunekoLaboratory.AssetExplorer.Database
         /// <returns></returns>
         public async Task<FindAssetByGuidResponse> FindAssetByGuid(string guid)
         {
-            return await GetAsync<FindAssetByGuidResponse>($"/v1/assets/{guid}/");
+            return await GetAsync<FindAssetByGuidResponse>($"/v1/assets/{guid}");
         }
 
         #region Request

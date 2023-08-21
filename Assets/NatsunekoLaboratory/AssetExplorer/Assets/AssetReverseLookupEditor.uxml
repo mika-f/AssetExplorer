@@ -35,36 +35,13 @@
 
     <engine:VisualElement class="my-4">
       <engine:Label text="Result" class="text-lg mb-2" />
-      <engine:ScrollView class="min-h-200px" mode="VerticalAndHorizontal">
+      <engine:ScrollView class="min-h-200px" mode="Vertical">
         <engine:VisualElement name="result-container" class="min-w-460px">
           <engine:VisualElement name="not-found" class="flex border-1px border-cccccc p-1">
             <engine:Label text="No Asset Found" />
           </engine:VisualElement>
-          <engine:VisualElement name="found" class="none flex-row border-1px border-cccccc p-1">
-            <engine:VisualElement class="w-160px flex-shrink-0">
-              <engine:Label class="h-18px bold text-sm mb-1" text="GUID :" />
-              <engine:Label class="h-18px bold text-sm mb-1" text="PACKAGE :" />
-              <engine:Label class="h-18px bold text-sm mb-1" text="URL:" />
-              <engine:Label class="h-18px bold text-sm mb-1" text="WELL KNOWN NAME:" />
-              <engine:Label class="h-18px bold text-sm mb-1" text="WELL KNOWN TYPE:" />
-              <engine:Label class="h-18px bold text-sm mb-1" text="CANONICAL NAME:" />
-              <engine:Label class="h-18px bold text-sm mb-1" text="VERSIONS IN :" />
-              <engine:Label class="h-18px bold text-sm mb-1" text="VERIFIED BY USES:" />
-            </engine:VisualElement>
-            <engine:VisualElement class="flex-grow-1 min-w-290px">
-              <engine:Label class="h-18px text-sm mb-1" name="guid" />
-              <engine:Label class="h-18px text-sm mb-1" name="package" />
-              <engine:Label class="h-18px text-sm mb-1" name="url" />
-              <engine:Label class="h-18px text-sm mb-1" name="well-known-name" />
-              <engine:Label class="h-18px text-sm mb-1" name="well-known-type" />
-              <engine:Label class="h-18px text-sm mb-1" name="canonical-name" />
-              <engine:Label class="h-18px text-sm mb-1" name="versions" />
-              <engine:Label class="h-18px text-sm mb-1 text-0x22c55e bold" name="verified" />
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement name="found-multi" class="none">
-            <!--
-            <engine:VisualElement class="border-1px border-cccccc p-1 my-1">
+          <engine:VisualElement name="found" class="none">
+            <engine:VisualElement class="border-1px border-cccccc p-2 my-1">
               <engine:Label class="bold text-lg mb-2" text="Shader" />
               <engine:VisualElement class="flex flex-row">
                 <engine:VisualElement class="w-160px flex-shrink-0">
@@ -89,7 +66,6 @@
                 </engine:VisualElement>
               </engine:VisualElement>
             </engine:VisualElement>
-            -->
           </engine:VisualElement>
         </engine:VisualElement>
       </engine:ScrollView>

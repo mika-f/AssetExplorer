@@ -5,12 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 using NatsunekoLaboratory.AssetExplorer.Database;
 using NatsunekoLaboratory.AssetExplorer.Extensions;
-using NatsunekoLaboratory.AssetExplorer.Models;
 
 using UnityEditor;
 
@@ -39,6 +39,17 @@ namespace NatsunekoLaboratory.AssetExplorer.Editors
             Show<AssetReverseLookupEditor>("Reverse Lookup");
         }
 
+#if USTYLED
+
+        [MenuItem("Window/Natsuneko Laboratory/Asset Explorer/Reverse Lookup - Generate Static CSS")]
+        public static void GenerateStaticCss()
+        {
+            var window = Show<AssetReverseLookupEditor>("Reverse Lookup");
+            window.GenerateStaticCss(Path.Combine(Application.dataPath, "NatsunekoLaboratory", "AssetExplorer", "Assets", "AssetReverseLookupEditor.Generated.uss"));
+        }
+
+#endif
+
         protected override void OnGuiCreated()
         {
             var root = rootVisualElement;
@@ -60,42 +71,22 @@ namespace NatsunekoLaboratory.AssetExplorer.Editors
             var root = rootVisualElement;
             var container = root.QuerySelector<VisualElement>("[name='result-container']");
 
-            void ToggleContainer(bool r, bool isMultiContainer = false)
+            void ToggleContainer(bool r)
             {
                 var n = container.QuerySelector<VisualElement>("[name='not-found']");
-                var y = container.QuerySelector<VisualElement>("[name='found']");
-                var m = container.QuerySelector<VisualElement>("[name='found-multi']");
+                var m = container.QuerySelector<VisualElement>("[name='found']");
 
                 if (r)
                 {
                     n.AddToClassList("none");
                     n.RemoveFromClassList("flex");
-
-                    if (isMultiContainer)
-                    {
-                        y.AddToClassList("none");
-                        y.RemoveFromClassList("flex");
-
-                        m.AddToClassList("flex");
-                        m.RemoveFromClassList("none");
-                    }
-                    else
-                    {
-                        y.AddToClassList("flex");
-                        y.RemoveFromClassList("none");
-
-                        m.AddToClassList("none");
-                        m.RemoveFromClassList("flex");
-                    }
+                    m.AddToClassList("flex");
+                    m.RemoveFromClassList("none");
                 }
                 else
                 {
                     n.AddToClassList("flex");
                     n.RemoveFromClassList("none");
-
-                    y.AddToClassList("none");
-                    y.RemoveFromClassList("flex");
-
                     m.AddToClassList("none");
                     m.RemoveFromClassList("flex");
                 }
@@ -108,7 +99,7 @@ namespace NatsunekoLaboratory.AssetExplorer.Editors
                 EditorUtility.DisplayProgressBar("AssetDatabase", "Searching Asset Information...", 1f);
 
                 var r = _go != null ? await SearchObjectReferences(container) : await SearchGuid(container);
-                ToggleContainer(r, _go != null);
+                ToggleContainer(r);
             }
             catch (Exception e)
             {
@@ -123,6 +114,59 @@ namespace NatsunekoLaboratory.AssetExplorer.Editors
             }
         }
 
+        private VisualElement CreateContainer(ResultContainer r, KeyValuePair<string, string> property)
+        {
+            var root = new VisualElement();
+            root.AddClasses("border-1px", "border-cccccc", "p-2", "my-1");
+
+            var scroller = new ScrollView(ScrollViewMode.Horizontal);
+
+            if (!property.Equals(default(KeyValuePair<string, string>)))
+            {
+                var heading = new Label($"Property: {property.Key}");
+                heading.AddClasses("bold", "text-lg", "mb-2");
+                root.Add(heading);
+            }
+
+            var result = new VisualElement();
+            result.AddClasses("flex", "flex-row");
+
+            var left = new VisualElement();
+            left.AddClasses("w-160px", "flex-shrink-0");
+
+            var labels = new[] { "GUID", "PACKAGE", "URL", "WELL KNOWN NAME", "WELL KNOWN TYPE", "CANONICAL NAME", "VERSIONS IN", "VERIFIED BY USERS" };
+            foreach (var label in labels)
+            {
+                var l = new Label($"{label} :");
+                l.AddClasses("h-18px", "bold", "text-sm", "mb-1");
+
+                left.Add(l);
+            }
+
+            var right = new VisualElement();
+            right.AddClasses("flex-grow-1", "min-w-290px");
+
+
+            var values = new[] { r.Id, r.Name, r.Url, r.WellKnownName, r.WellKnownType, r.WellKnownName, string.Join(",", r.Versions), "No" };
+            var isNotFoundOnDatabase = values.Skip(1).Take(values.Length - 2).All(string.IsNullOrWhiteSpace);
+            foreach (var value in values.Select(w => string.IsNullOrWhiteSpace(w) ? "Unknown" : w))
+            {
+                var v = new Label(isNotFoundOnDatabase ? "Not Found" : value);
+                v.AddClasses("h-18px", "text-sm", "mb-1");
+
+                right.Add(v);
+            }
+
+            result.Add(left);
+            result.Add(right);
+
+            scroller.Add(result);
+            root.Add(scroller);
+
+            return root;
+        }
+
+
         private async Task<bool> SearchObjectReferences(VisualElement container)
         {
             var so = new SerializedObject(_go);
@@ -136,87 +180,69 @@ namespace NatsunekoLaboratory.AssetExplorer.Editors
                         var instanceId = current.objectReferenceInstanceIDValue;
                         AssetDatabase.TryGetGUIDAndLocalFileIdentifier(instanceId, out var guid, out long _);
 
+
+                        if (properties.ContainsKey(current.displayName))
+                            continue;
+
                         properties.Add(current.displayName, guid);
                     }
 
             if (properties.Count == 0)
                 return false;
 
-            VisualElement CreateContainer(KeyValuePair<string, string> property, FindAssetByGuidResponse r)
-            {
-                var root = new VisualElement();
-                root.AddClasses("border-1px", "border-cccccc", "p-1", "my-1");
 
-                var heading = new Label($"Property: {property.Key}");
-                heading.AddClasses("bold", "text-lg", "mb-2");
-
-                root.Add(heading);
-
-                var result = new VisualElement();
-                result.AddClasses("flex", "flex-row");
-
-                var left = new VisualElement();
-                left.AddClasses("w-160px", "flex-shrink-0");
-
-                var labels = new[] { "GUID", "PACKAGE", "URL", "WELL KNOWN NAME", "WELL KNOWN TYPE", "CANONICAL NAME", "VERSIONS IN", "VERIFIED BY USERS" };
-                foreach (var label in labels)
-                {
-                    var l = new Label($"{label} :");
-                    l.AddClasses("h-18px", "bold", "text-sm", "mb-1");
-
-                    left.Add(l);
-                }
-
-                var right = new VisualElement();
-                right.AddClasses("flex-grow-1", "min-w-290px");
-
-                var values = new[] { property.Value, r?.Package?.Name, r?.Package?.Url, r?.WellKnownName, r?.WellKnownType, r?.WellKnownName, string.Join(", ", r?.Versions ?? new List<string>()), "No" };
-                var isNotFoundOnDatabase = values.Skip(1).Take(values.Length - 2).All(string.IsNullOrWhiteSpace);
-                foreach (var value in values.Select(w => string.IsNullOrWhiteSpace(w) ? "Unknown" : w))
-                {
-                    var v = new Label(isNotFoundOnDatabase ? "Not Found" : value);
-                    v.AddClasses("h-18px", "text-sm", "mb-1");
-
-                    right.Add(v);
-                }
-
-                result.Add(left);
-                result.Add(right);
-
-                root.Add(result);
-
-                return root;
-            }
-
-            var c = container.QuerySelector<VisualElement>("[name='found-multi']");
+            var c = container.QuerySelector<VisualElement>("[name='found']");
             c.Clear();
 
             foreach (var property in properties)
                 try
                 {
                     var response = await AssetDatabaseClient.Instance.FindAssetByGuid(property.Value);
-                    c.Add(CreateContainer(property, response));
+                    foreach (var package in response.Packages)
+                    {
+                        var result = new ResultContainer
+                        {
+                            Id = response.Id,
+                            WellKnownName = response.WellKnownName,
+                            WellKnownType = response.WellKnownType,
+                            Name = package.Name,
+                            Url = package.Url,
+                            Versions = package.Versions.ToList()
+                        };
+
+                        c.Add(CreateContainer(result, property));
+                    }
                 }
-                catch (Exception e)
+                catch
                 {
-                    c.Add(CreateContainer(property, null));
+                    // ignored
                 }
 
-            return true;
+            return c.childCount > 0;
         }
 
         private async Task<bool> SearchGuid(VisualElement container)
         {
             var response = await AssetDatabaseClient.Instance.FindAssetByGuid(_guid);
 
-            container.QuerySelector<Label>("[name='guid']").text = _guid;
-            container.QuerySelector<Label>("[name='package']").text = response.Package.Name;
-            container.QuerySelector<Label>("[name='url']").text = string.IsNullOrWhiteSpace(response.Package.Url) ? "Unspecified" : response.Package.Url;
-            container.QuerySelector<Label>("[name='well-known-name']").text = response.WellKnownName;
-            container.QuerySelector<Label>("[name='well-known-type']").text = response.WellKnownType;
-            container.QuerySelector<Label>("[name='canonical-name']").text = response.WellKnownName;
-            container.QuerySelector<Label>("[name='versions']").text = string.Join(", ", response.Versions);
-            container.QuerySelector<Label>("[name='verified']").text = "No";
+            var c = container.QuerySelector<VisualElement>("[name='found']");
+            c.Clear();
+
+            foreach (var package in response.Packages)
+            {
+                var result = new ResultContainer
+                {
+                    Id = response.Id,
+                    WellKnownName = response.WellKnownName,
+                    WellKnownType = response.WellKnownType,
+                    Name = package.Name,
+                    Url = package.Url,
+                    Versions = package.Versions.ToList()
+                };
+
+                c.Add(CreateContainer(result, default));
+            }
+
 
             return true;
         }
@@ -225,6 +251,21 @@ namespace NatsunekoLaboratory.AssetExplorer.Editors
         protected override string XamlGuid()
         {
             return "30b25e96ff4452c4a9363008c1e78a27";
+        }
+
+        protected override string AdditionalStyleSheetGuid()
+        {
+            return "e0e00a63d0c631d4ab1b13964610493d";
+        }
+
+        private class ResultContainer
+        {
+            public string Id { get; set; }
+            public string WellKnownName { get; set; }
+            public string WellKnownType { get; set; }
+            public string Name { get; set; }
+            public string Url { get; set; }
+            public List<string> Versions { get; set; }
         }
     }
 }

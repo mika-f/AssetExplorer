@@ -15,9 +15,8 @@ namespace NatsunekoLaboratory.AssetExplorer.Models
 
         public string WellKnownType { get; set; }
 
-        public PackageResponse Package { get; set; }
+        public List<PackageResponse> Packages { get; set; }
 
-        public List<string> Versions { get; set; }
 
         internal class PackageResponse
         {
@@ -26,6 +25,8 @@ namespace NatsunekoLaboratory.AssetExplorer.Models
             public string Name { get; set; }
 
             public string Url { get; set; }
+
+            public List<string> Versions { get; set; }
         }
     }
 }
