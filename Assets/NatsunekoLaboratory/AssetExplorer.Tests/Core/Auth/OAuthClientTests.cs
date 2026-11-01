@@ -34,7 +34,7 @@ namespace NatsunekoLaboratory.AssetExplorer.Tests.Auth
         public void Authorize_url_has_all_params()
         {
             var pkce = Pkce.FromVerifier("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk");
-            var url = Client().GetAuthorizeUrl(Redirect, pkce, "s t").ToString();
+            var url = Client().GetAuthorizeUrl(Redirect, pkce, "s t").OriginalString; // Mono's Uri.ToString() unescapes the query
 
             Assert.That(url, Does.StartWith("https://accounts.test/authorize?"));
             Assert.That(url, Does.Contain("response_type=code"));
