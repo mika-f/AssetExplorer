@@ -18,18 +18,16 @@ using UnityEngine.UIElements;
 namespace NatsunekoLaboratory.AssetExplorer.UI.Components
 {
     /// <summary>
-    ///     Runs one request at a time for a view: a new run cancels the previous one, results for a detached view are dropped,
+    ///     Runs one request at a time for a view: a new run cancels the previous one, results of a cancelled run are dropped,
     ///     and failures become an error state with a retry button.
     /// </summary>
     internal sealed class AsyncView
     {
-        private readonly VisualElement _owner;
         private readonly StateView _state;
         private CancellationTokenSource _cts;
 
-        public AsyncView(VisualElement owner, StateView state)
+        public AsyncView(StateView state)
         {
-            _owner = owner;
             _state = state;
         }
 
@@ -42,8 +40,8 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Components
         }
 
         /// <summary>
-        ///     Runs <paramref name="work" /> on the main thread's async context. <paramref name="work" /> touches the UI only after awaiting;
-        ///     it is skipped when the run was replaced or the view closed.
+        ///     Runs <paramref name="work" /> on the main thread's async context. After each await, <paramref name="work" /> checks
+        ///     <see cref="IsCurrent" /> before touching the UI.
         /// </summary>
         public async void Run(Func<CancellationToken, Task> work, Action retry)
         {
@@ -61,7 +59,7 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Components
             }
             catch (Exception e)
             {
-                if (!cts.IsCancellationRequested && _owner.panel != null)
+                if (!cts.IsCancellationRequested)
                     _state.ShowError(ErrorMessages.Describe(e), retry);
             }
             finally
@@ -71,10 +69,13 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Components
             }
         }
 
-        /// <summary>True when the result of <paramref name="ct" />'s run should still be shown.</summary>
+        /// <summary>
+        ///     True when the result of <paramref name="ct" />'s run should still be shown. Closing the window cancels the run;
+        ///     a view that is not attached yet (opened from a menu before the window built its UI) still gets its result.
+        /// </summary>
         public bool IsCurrent(CancellationToken ct)
         {
-            return !ct.IsCancellationRequested && _owner.panel != null;
+            return !ct.IsCancellationRequested;
         }
     }
 

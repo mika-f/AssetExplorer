@@ -64,7 +64,7 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
             _result = new VisualElement();
             Add(_result);
 
-            _async = new AsyncView(this, _state);
+            _async = new AsyncView(_state);
         }
 
         public override void OnClosed()

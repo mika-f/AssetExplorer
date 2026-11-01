@@ -130,7 +130,9 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Components
             Add(Ui.Link(release.Package?.Name ?? "(名前なし)", PetrichorSettings.PackageUrl(release.Package?.Id), "petrichor-release-package"));
             Add(Ui.Link(release.Version ?? "", PetrichorSettings.ReleaseUrl(release.Id), "petrichor-release-version"));
             Add(new StatusBadge(release.Status));
-            Add(Ui.Text($"{release.SubmitterCount} 人", "petrichor-muted"));
+            // legacy releases were migrated without submitters
+            if (release.SubmitterCount > 0)
+                Add(Ui.Text($"{release.SubmitterCount} 人", "petrichor-muted"));
 
             if (!string.IsNullOrEmpty(trailingText))
                 Add(Ui.Text(trailingText, "petrichor-release-trailing", "petrichor-muted"));

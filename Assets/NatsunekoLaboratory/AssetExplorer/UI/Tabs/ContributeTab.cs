@@ -100,7 +100,7 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
             _sourceState = new StateView();
             _sourceState.ShowIdle("フォルダ・パッケージ・選択中のアセット・.unitypackage のどれかを選んでください");
             left.Add(_sourceState);
-            _sourceAsync = new AsyncView(this, _sourceState);
+            _sourceAsync = new AsyncView(_sourceState);
 
             // 2. preview
             left.Add(Ui.Heading("2. プレビュー"));
@@ -167,7 +167,7 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
             _submitState = new StateView();
             _submitState.ShowContent();
             right.Add(_submitState);
-            _submitAsync = new AsyncView(this, _submitState);
+            _submitAsync = new AsyncView(_submitState);
 
             _result = new VisualElement();
             right.Add(_result);
