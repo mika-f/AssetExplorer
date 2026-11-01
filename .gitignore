@@ -76,3 +76,8 @@ crashlytics-build.properties
 # External Dependencies
 Assets/NatsunekoLaboratory/UStyled.meta
 Assets/NatsunekoLaboratory/UStyled/*
+
+# Test harness build output
+tools/**/bin/
+tools/**/obj/
+!tools/**/*.csproj

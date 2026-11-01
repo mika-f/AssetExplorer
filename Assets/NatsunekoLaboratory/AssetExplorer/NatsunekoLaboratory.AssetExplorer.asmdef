@@ -1,8 +1,7 @@
 {
     "name": "NatsunekoLaboratory.AssetExplorer",
-    "references": [
-        "GUID:a8e25f4eb2ce45342b4a847108acb2d9"
-    ],
+    "rootNamespace": "NatsunekoLaboratory.AssetExplorer",
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],

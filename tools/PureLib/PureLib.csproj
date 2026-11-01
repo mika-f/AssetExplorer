@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Compiles the Unity-independent sources against .NET Standard 2.1 with C# 9, like Unity 2022.3. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>PureLib</AssemblyName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Assets/NatsunekoLaboratory/AssetExplorer/Core/**/*.cs" />
+    <Compile Include="../../Assets/NatsunekoLaboratory/AssetExplorer/AssemblyInfo.cs" />
+  </ItemGroup>
+</Project>
