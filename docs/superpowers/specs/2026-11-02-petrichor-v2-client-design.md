@@ -252,4 +252,4 @@ Then set `PetrichorSettings.DefaultClientId` to the issued client ID before rele
 
 - Commits on branch `claude/petrichor-v2-e62b86`, English AngularJS-style messages, with the co-author trailer.
 - README rewritten for Petrichor (features, login, the manual registration step, privacy).
-- Push to `origin` (github.com/mika-f/AssetExplorer) and open a PR against `main`.
+- Developed on the default branch at the user's request: the worktree branch is fast-forward pushed to `origin/main` (github.com/mika-f/AssetExplorer); no PR.
