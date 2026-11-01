@@ -67,6 +67,9 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
             _async = new AsyncView(_state);
         }
 
+        /// <summary>True while a lookup is in flight.</summary>
+        internal bool IsBusy => _async.IsRunning;
+
         public override void OnClosed()
         {
             _async.Cancel();
@@ -74,6 +77,8 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
 
         public void Search()
         {
+            // a new search replaces the previous one, even when it stops at validation
+            _async.Cancel();
             var guid = _guid.value?.Trim() ?? "";
             _result.Clear();
 

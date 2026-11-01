@@ -56,6 +56,9 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
             _async = new AsyncView(_state);
         }
 
+        /// <summary>True while a lookup is in flight.</summary>
+        internal bool IsBusy => _async.IsRunning;
+
         public override void OnClosed()
         {
             _async.Cancel();
@@ -113,6 +116,8 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
 
         private void Run(Func<List<MissingReference>> collect)
         {
+            // a new scan replaces the previous lookup, even when it finds nothing to look up
+            _async.Cancel();
             _result.Clear();
             _status.text = "";
 

@@ -68,6 +68,8 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
 
             var left = Column();
             var right = Column();
+            _columns.Add(left);
+            _columns.Add(right);
 
             // 1. source
             left.Add(Ui.Heading("1. ソース"));
@@ -236,6 +238,9 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
 
         private void LoadSource(Func<List<ManifestAsset>> build, string packageJson, DetectedPackageInfo fallback)
         {
+            // a .unitypackage still being read must not replace the source picked after it
+            _sourceAsync.Cancel();
+
             try
             {
                 SetAssets(build());
@@ -248,12 +253,18 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
             }
         }
 
+        /// <summary>True while a .unitypackage is being read.</summary>
+        internal bool IsLoadingSource => _sourceAsync.IsRunning;
+
         private void PickUnityPackage()
         {
             var path = EditorUtility.OpenFilePanel("unitypackage を選ぶ", "", "unitypackage");
-            if (string.IsNullOrEmpty(path))
-                return;
+            if (!string.IsNullOrEmpty(path))
+                LoadUnityPackage(path);
+        }
 
+        internal void LoadUnityPackage(string path)
+        {
             var size = new FileInfo(path).Length;
             _sourceAsync.Run(async ct =>
             {
@@ -287,7 +298,7 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
                 _folder.SetValueWithoutNotify(null);
                 SetAssets(assets);
                 Prefill(packageJson == null ? null : PackageInfoDetector.FromPackageJson(packageJson), PackageInfoDetector.FromFileName(path));
-            }, PickUnityPackage);
+            }, () => LoadUnityPackage(path));
         }
 
         private void SetAssets(List<ManifestAsset> assets)
@@ -315,6 +326,12 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Tabs
 
         private void Prefill(DetectedPackageInfo fromPackageJson, DetectedPackageInfo fallback)
         {
+            // package details belong to the previous source; never carry them over to another one
+            _identifier.value = "";
+            _name.value = "";
+            _description.value = "";
+            _version.value = "";
+
             if (fromPackageJson != null && !string.IsNullOrWhiteSpace(fromPackageJson.Name))
             {
                 _identifierKind.value = IdentifierKinds[0];
