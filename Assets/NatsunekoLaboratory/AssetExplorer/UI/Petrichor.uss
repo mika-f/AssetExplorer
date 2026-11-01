@@ -1,0 +1,287 @@
+/* Petrichor window. Colors come from the editor theme variables so the light and dark skins both work. */
+
+.petrichor-root {
+    flex-grow: 1;
+    background-color: var(--unity-colors-window-background);
+}
+
+/* top bar */
+
+.petrichor-topbar {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border-bottom-width: 1px;
+    border-color: var(--unity-colors-toolbar-border);
+    background-color: var(--unity-colors-toolbar-background);
+}
+
+.petrichor-title {
+    -unity-font-style: bold;
+    font-size: 13px;
+    margin-right: 12px;
+}
+
+.petrichor-tabs {
+    flex-direction: row;
+    flex-shrink: 1;
+    flex-wrap: wrap;
+}
+
+.petrichor-tab {
+    margin: 0 2px 0 0;
+    padding: 3px 10px;
+    border-width: 1px;
+    border-radius: 4px;
+    border-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--unity-colors-label-text);
+}
+
+.petrichor-tab:hover {
+    background-color: var(--unity-colors-button-background-hover);
+}
+
+.petrichor-tab--selected {
+    border-color: var(--unity-colors-default-border);
+    background-color: var(--unity-colors-button-background);
+    color: var(--unity-colors-default-text);
+}
+
+.petrichor-account {
+    margin-left: auto;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.petrichor-body {
+    flex-grow: 1;
+}
+
+.petrichor-page {
+    padding: 12px 14px 16px 14px;
+}
+
+/* text */
+
+.petrichor-heading {
+    -unity-font-style: bold;
+    font-size: 12px;
+    margin: 14px 0 6px 0;
+}
+
+.petrichor-muted {
+    color: var(--unity-colors-label-text);
+    opacity: 0.8;
+}
+
+.petrichor-hint {
+    font-size: 11px;
+    white-space: normal;
+    color: var(--unity-colors-label-text);
+    opacity: 0.8;
+}
+
+.petrichor-error-text {
+    color: var(--unity-colors-error-text);
+    white-space: normal;
+}
+
+.petrichor-success-text {
+    color: #2ea043;
+    white-space: normal;
+}
+
+.petrichor-warning-text {
+    color: var(--unity-colors-warning-text);
+    white-space: normal;
+}
+
+.petrichor-link {
+    color: var(--unity-colors-link-text);
+    cursor: link;
+}
+
+.petrichor-link:hover {
+    -unity-font-style: bold;
+}
+
+.petrichor-mono {
+    font-size: 11px;
+}
+
+/* layout */
+
+.petrichor-row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.petrichor-grow {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.petrichor-gap > * {
+    margin-right: 6px;
+}
+
+.petrichor-columns {
+    flex-direction: column;
+}
+
+.petrichor-columns--wide {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.petrichor-columns--wide > .petrichor-column {
+    flex-basis: 0;
+    flex-grow: 1;
+    margin-right: 16px;
+}
+
+.petrichor-panel {
+    padding: 8px 10px;
+    margin: 4px 0;
+    border-width: 1px;
+    border-radius: 4px;
+    border-color: var(--unity-colors-helpbox-border);
+    background-color: var(--unity-colors-helpbox-background);
+}
+
+/* lists */
+
+.petrichor-list-row {
+    flex-direction: row;
+    align-items: center;
+    min-height: 22px;
+    padding: 3px 0;
+    border-bottom-width: 1px;
+    border-color: var(--unity-colors-default-border);
+}
+
+.petrichor-list-row--muted {
+    opacity: 0.6;
+}
+
+.petrichor-release-package {
+    -unity-font-style: bold;
+    margin-right: 6px;
+}
+
+.petrichor-release-version {
+    margin-right: 8px;
+}
+
+.petrichor-release-trailing {
+    margin-left: auto;
+    padding-left: 8px;
+}
+
+.petrichor-path {
+    white-space: normal;
+}
+
+/* badges */
+
+.petrichor-badge {
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-right: 6px;
+    border-width: 1px;
+    border-radius: 4px;
+    -unity-text-align: middle-center;
+}
+
+.petrichor-badge--verified {
+    background-color: rgba(46, 160, 67, 0.22);
+    border-color: rgba(46, 160, 67, 0.45);
+    color: #2ea043;
+}
+
+.petrichor-badge--legacy {
+    background-color: rgba(56, 132, 255, 0.20);
+    border-color: rgba(56, 132, 255, 0.45);
+    color: #4c8dff;
+}
+
+.petrichor-badge--unverified {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: var(--unity-colors-default-border);
+    color: var(--unity-colors-label-text);
+}
+
+.petrichor-badge--neutral {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: var(--unity-colors-default-border);
+    color: var(--unity-colors-label-text);
+}
+
+/* guid */
+
+.petrichor-guid {
+    flex-direction: row;
+    align-items: center;
+}
+
+.petrichor-guid > TextField {
+    flex-grow: 1;
+    margin: 0;
+}
+
+.petrichor-guid .unity-base-text-field__input {
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    padding-left: 0;
+}
+
+.petrichor-icon-button {
+    padding: 1px 6px;
+    margin: 0 0 0 4px;
+    font-size: 10px;
+}
+
+/* states */
+
+.petrichor-state {
+    padding: 18px 8px;
+    align-items: center;
+}
+
+.petrichor-state-title {
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.petrichor-state-body {
+    white-space: normal;
+    -unity-text-align: middle-center;
+    color: var(--unity-colors-label-text);
+    margin-bottom: 8px;
+}
+
+/* forms */
+
+.petrichor-field {
+    margin: 2px 0;
+}
+
+.petrichor-primary {
+    -unity-font-style: bold;
+}
+
+.petrichor-problems {
+    margin-top: 4px;
+}
+
+.petrichor-preview {
+    height: 220px;
+    border-width: 1px;
+    border-color: var(--unity-colors-default-border);
+    border-radius: 4px;
+}
