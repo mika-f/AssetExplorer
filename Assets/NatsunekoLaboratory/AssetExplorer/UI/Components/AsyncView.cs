@@ -4,6 +4,7 @@
 // ------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -106,6 +107,12 @@ namespace NatsunekoLaboratory.AssetExplorer.UI.Components
 
                 case TimeoutException timeout:
                     return timeout.Message;
+
+                case InvalidDataException data:
+                    return $"unitypackage を読み込めませんでした: {data.Message}";
+
+                case IOException io:
+                    return $"ファイルを読み込めませんでした: {io.Message}";
 
                 case TaskCanceledException _:
                     return "応答がありませんでした。時間をおいてやり直してください";
