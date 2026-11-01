@@ -130,6 +130,33 @@ namespace NatsunekoLaboratory.AssetExplorer.Tests.Contribute
         }
 
         [Test]
+        public void Reads_meta_files_over_one_megabyte()
+        {
+            // e.g. a model with hundreds of animation clips; the guid and importer are at the top
+            var meta = Meta(A, "ModelImporter") + "  animations:\n" + string.Concat(Enumerable.Repeat("    - name: clip\n", 120_000));
+            var archive = new TarBuilder()
+                          .File($"{A}/pathname", "Assets/Model.fbx")
+                          .File($"{A}/asset.meta", meta)
+                          .File($"{A}/asset", "fbx");
+
+            var assets = UnityPackageReader.ToManifestAssets(UnityPackageReader.Read(archive.BuildStream(), null, CancellationToken.None));
+
+            Assert.That(Encoding.UTF8.GetByteCount(meta), Is.GreaterThan(1024 * 1024));
+            Assert.That(assets.Select(w => (w.Guid, w.Type)), Is.EqualTo(new[] { (A, "ModelImporter") }));
+        }
+
+        [Test]
+        public void Oversized_pathname_is_ignored_without_error()
+        {
+            var archive = new TarBuilder()
+                          .File($"{A}/pathname", new string('x', 17 * 1024 * 1024))
+                          .File($"{A}/asset.meta", Meta(A))
+                          .File($"{A}/asset", "a");
+
+            Assert.That(UnityPackageReader.ToManifestAssets(UnityPackageReader.Read(archive.BuildStream(), null, CancellationToken.None)), Is.Empty);
+        }
+
+        [Test]
         public void ReadAsset_returns_bytes_for_guid()
         {
             var archive = new TarBuilder()

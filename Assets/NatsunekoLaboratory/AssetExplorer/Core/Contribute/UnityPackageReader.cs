@@ -34,7 +34,8 @@ namespace NatsunekoLaboratory.AssetExplorer.Contribute
     internal static class UnityPackageReader
     {
         private const int BlockSize = 512;
-        private const int MaxTextEntrySize = 1024 * 1024;
+        // .meta files of models with many animation clips can be several megabytes; anything larger is not a real entry
+        private const int MaxTextEntrySize = 16 * 1024 * 1024;
 
         public static List<UnityPackageEntry> Read(Stream gzipStream, IProgress<long> compressedBytesRead, CancellationToken ct)
         {
@@ -173,6 +174,9 @@ namespace NatsunekoLaboratory.AssetExplorer.Contribute
 
         private static string ReadPathname(string text)
         {
+            if (text == null)
+                return null;
+
             // Some Unity versions append "\n00" after the path
             var newline = text.IndexOf('\n');
             return (newline >= 0 ? text.Substring(0, newline) : text).TrimEnd('\r');

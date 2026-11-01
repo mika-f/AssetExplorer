@@ -159,6 +159,11 @@ namespace NatsunekoLaboratory.AssetExplorer.Auth
 
         private async Task<string> RefreshCoreAsync(StoredToken current)
         {
+            // Every Unity editor on this machine shares the stored tokens, and each refresh rotates them.
+            // When another editor already refreshed, its tokens are the valid ones: use them instead of the stale refresh token.
+            if (TryAdoptNewerStoredToken(current, out var adopted))
+                return adopted;
+
             if (string.IsNullOrEmpty(current?.RefreshToken))
             {
                 Logout();
@@ -173,7 +178,11 @@ namespace NatsunekoLaboratory.AssetExplorer.Auth
             }
             catch (OAuthException e) when (e.Kind == OAuthErrorKind.InvalidTokenResponse && (e.StatusCode == 400 || e.StatusCode == 401))
             {
-                // the refresh token was rotated elsewhere or the app was unlinked: only a new login helps
+                // another editor may have won the race while this request was in flight
+                if (TryAdoptNewerStoredToken(current, out adopted))
+                    return adopted;
+
+                // the refresh token was revoked or the app was unlinked: only a new login helps
                 Logout();
                 throw new AuthRequiredException();
             }
@@ -188,6 +197,19 @@ namespace NatsunekoLaboratory.AssetExplorer.Auth
             });
 
             return token.AccessToken;
+        }
+
+        private bool TryAdoptNewerStoredToken(StoredToken current, out string accessToken)
+        {
+            accessToken = null;
+            var stored = _storage.Load();
+            if (string.IsNullOrEmpty(stored?.AccessToken) || string.IsNullOrEmpty(stored.RefreshToken) || stored.RefreshToken == current?.RefreshToken)
+                return false;
+
+            Current = stored;
+            Changed?.Invoke();
+            accessToken = stored.AccessToken;
+            return true;
         }
     }
 

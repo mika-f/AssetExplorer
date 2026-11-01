@@ -137,6 +137,36 @@ namespace NatsunekoLaboratory.AssetExplorer.Tests.Auth
         }
 
         [Test]
+        public void Refresh_uses_token_rotated_by_another_editor()
+        {
+            Store(TimeSpan.FromHours(2));
+            var session = Session();
+
+            // another Unity editor on the same machine refreshed and saved new tokens
+            _storage.Save(new StoredToken { AccessToken = "other-at", RefreshToken = "other-rt", ExpiresAt = Now.AddDays(7) });
+
+            Assert.That(AsyncHelper.Run(() => session.GetAccessTokenAsync(CancellationToken.None)), Is.EqualTo("other-at"));
+            Assert.That(TokenCalls, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Rejected_refresh_keeps_token_saved_by_another_editor_meanwhile()
+        {
+            Store(TimeSpan.FromHours(2));
+            var session = Session();
+            _token = _ =>
+            {
+                // the other editor won the race: it rotated the refresh token and saved the result
+                _storage.Save(new StoredToken { AccessToken = "other-at", RefreshToken = "other-rt", ExpiresAt = Now.AddDays(7) });
+                return MockHandler.Json(HttpStatusCode.BadRequest, "{\"error\":\"invalid_grant\"}");
+            };
+
+            Assert.That(AsyncHelper.Run(() => session.GetAccessTokenAsync(CancellationToken.None)), Is.EqualTo("other-at"));
+            Assert.That(_storage.Load().RefreshToken, Is.EqualTo("other-rt"));
+            Assert.That(session.IsLoggedIn, Is.True);
+        }
+
+        [Test]
         public void Network_error_on_refresh_keeps_tokens()
         {
             Store(TimeSpan.FromHours(2));
