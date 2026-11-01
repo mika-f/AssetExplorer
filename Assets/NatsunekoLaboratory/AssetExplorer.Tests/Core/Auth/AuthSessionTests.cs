@@ -20,7 +20,7 @@ namespace NatsunekoLaboratory.AssetExplorer.Tests.Auth
     {
         private static readonly DateTimeOffset Now = new DateTimeOffset(2026, 11, 2, 0, 0, 0, TimeSpan.Zero);
 
-        private MemoryStorage _storage;
+        private MemoryTokenStorage _storage;
         private MockHandler _handler;
         private Func<RecordedRequest, HttpResponseMessage> _api;
         private Func<RecordedRequest, HttpResponseMessage> _token;
@@ -29,7 +29,7 @@ namespace NatsunekoLaboratory.AssetExplorer.Tests.Auth
         [SetUp]
         public void SetUp()
         {
-            _storage = new MemoryStorage();
+            _storage = new MemoryTokenStorage();
             _api = _ => MockHandler.Json(HttpStatusCode.OK, "{}");
             _token = _ => MockHandler.Json(HttpStatusCode.OK, "{\"access_token\":\"new-at\",\"refresh_token\":\"new-rt\",\"token_type\":\"Bearer\",\"expires_in\":604800}");
             _handler = new MockHandler(r => r.Uri.AbsolutePath == "/token" ? _token(r) : _api(r));
@@ -208,26 +208,6 @@ namespace NatsunekoLaboratory.AssetExplorer.Tests.Auth
             Assert.That(copy.DisplayName, Is.EqualTo("d"));
             Assert.That(StoredToken.FromJson("not json"), Is.Null);
             Assert.That(StoredToken.FromJson(null), Is.Null);
-        }
-
-        private sealed class MemoryStorage : ITokenStorage
-        {
-            private string _json;
-
-            public StoredToken Load()
-            {
-                return StoredToken.FromJson(_json);
-            }
-
-            public void Save(StoredToken token)
-            {
-                _json = token.ToJson();
-            }
-
-            public void Clear()
-            {
-                _json = null;
-            }
         }
     }
 }
